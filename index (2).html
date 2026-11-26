@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bénévolat — accompagnement scolaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --coral-1: #DF3A52;
+    --coral-2: #C42139;
+    --yellow: #FCCB5A;
+    --navy: #252F5C;
+    --sky: #B8E0E6;
+    --pink: #F2AAC0;
+    --mint: #9AD0AF;
+    --orange: #F4A25A;
+    --red-ink: #C21F39;
+  }
+  html {
+    min-height: 100%;
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+    background: var(--coral-2) linear-gradient(180deg, var(--coral-1), var(--coral-2)) no-repeat;
+  }
+  * { box-sizing: inherit; }
+  body {
+    margin: 0;
+    color: #fff;
+    font-family: "Montserrat", -apple-system, "Segoe UI", sans-serif;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+  a { color: #fff; font-weight: 700; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  a:hover { color: var(--yellow); }
+  :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; border-radius: 6px; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* En-tête */
+  header.page-head { position: relative; }
+  header.page-head > * { position: relative; z-index: 1; }
+  header.page-head > .squiggle { position: absolute; z-index: 0; right: -30px; top: -28px; width: 250px; pointer-events: none; }
+  header.page-head h1 {
+    display: inline-block;
+    margin: 0 0 28px;
+    padding: 30px 48px;
+    background: var(--yellow);
+    color: var(--red-ink);
+    font-weight: 800;
+    font-size: clamp(1.45rem, 5.2vw, 2.5rem);
+    line-height: 1.08;
+    text-transform: uppercase;
+    border-radius: 58% 42% 54% 46% / 56% 50% 50% 44%;
+    transform: rotate(-2.5deg);
+  }
+  header.page-head p.intro { max-width: 60ch; font-size: 1.1rem; font-weight: 600; margin: 0 0 8px; }
+  .legend {
+    display: flex; align-items: flex-start; gap: 12px;
+    margin-top: 22px; padding: 16px 20px;
+    background: #fff; color: var(--navy);
+    border-radius: 22px; font-size: 0.9rem; max-width: 62ch;
+  }
+  .legend span.mark { flex: none; font-size: 1.1rem; line-height: 1.3; }
+
+  /* Cafés de l'engagement */
+  .cafes { margin-top: 44px; }
+  .cafes h2 { font-weight: 800; font-size: 1.35rem; line-height: 1.25; margin: 0 0 6px; }
+  .cafes .sub { margin: 0 0 18px; font-weight: 600; font-size: 0.95rem; max-width: 62ch; }
+  .cafe-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .cafe {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 18px 12px 12px;
+    border-radius: 26px;
+    background: var(--bg); color: var(--ink);
+  }
+  .cafe-date {
+    flex: none; width: 70px; padding: 9px 0;
+    border-radius: 18px; text-align: center; line-height: 1.05;
+    background: var(--tile); color: var(--tile-ink);
+  }
+  .cafe-date small { display: block; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+  .cafe-date b { display: block; font-size: 1.75rem; font-weight: 800; }
+  .cafe h3 { margin: 0; font-size: 1rem; font-weight: 800; line-height: 1.25; }
+  .cafe p { margin: 3px 0 0; font-size: 0.82rem; font-weight: 600; line-height: 1.3; }
+
+  /* Filtres */
+  .filter-group { margin: 34px 0 0; }
+  .filter-group:last-of-type { margin-bottom: 36px; }
+  .filter-label { font-size: 0.85rem; font-weight: 700; margin: 0 0 10px; }
+  nav.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font: inherit; font-size: 0.86rem; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 8px;
+    color: #fff; background: rgba(255,255,255,0.14);
+    border: 2px solid #fff; padding: 7px 16px; border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .chip:hover { background: rgba(255,255,255,0.28); }
+  .chip.active { background: var(--yellow); border-color: var(--yellow); color: var(--navy); }
+  .chip[data-filter]:not([data-filter="all"])::before {
+    content: ""; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--dot); box-shadow: 0 0 0 1.5px #fff;
+  }
+  .chip.active[data-filter]::before { box-shadow: 0 0 0 1.5px var(--navy); }
+  .chip[data-filter="aide-devoirs"] { --dot: var(--sky); }
+  .chip[data-filter="sorties"]      { --dot: var(--yellow); }
+  .chip[data-filter="visio"]        { --dot: var(--pink); }
+  .chip[data-filter="mentorat"]     { --dot: var(--mint); }
+  .chip[data-filter="solidarite"]   { --dot: var(--orange); }
+  .chip[data-filter="projets"]      { --dot: var(--navy); }
+
+  /* Associations et missions */
+  .assoc { padding: 32px 0; border-top: 2px solid rgba(255,255,255,0.3); }
+  .assoc-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 4px 16px; flex-wrap: wrap; margin-bottom: 18px;
+  }
+  .assoc-head h2 { font-weight: 800; font-size: 1.5rem; line-height: 1.2; margin: 0; }
+  .assoc-loc { margin: 0; font-size: 0.9rem; font-weight: 600; }
+
+  .mission {
+    --bg: var(--sky); --ink: var(--navy);
+    background: var(--bg); color: var(--ink);
+    border-radius: 26px; padding: 22px 26px; margin-bottom: 14px;
+  }
+  .mission[data-theme="sorties"]    { --bg: var(--yellow); }
+  .mission[data-theme="visio"]      { --bg: var(--pink); }
+  .mission[data-theme="mentorat"]   { --bg: var(--mint); }
+  .mission[data-theme="solidarite"] { --bg: var(--orange); }
+  .mission[data-theme="projets"]    { --bg: var(--navy); --ink: #fff; }
+
+  .mission-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 10px 14px; flex-wrap: wrap; margin-bottom: 6px;
+  }
+  .mission-top h3 { font-weight: 800; font-size: 1.1rem; line-height: 1.3; margin: 0; }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { font-size: 0.74rem; font-weight: 700; padding: 4px 11px; border-radius: 999px; white-space: nowrap; }
+  .badge.theme-badge { background: var(--ink); color: var(--bg); }
+  .badge.benevole-badge { background: color-mix(in srgb, var(--ink) 14%, transparent); color: var(--ink); }
+  .badge.uni-badge { border: 1.5px solid var(--ink); color: var(--ink); }
+  .badge.paid-badge { background: #fff; color: var(--red-ink); }
+
+  .mission .desc { font-size: 0.93rem; max-width: 68ch; margin: 8px 0 16px; }
+  dl.facts {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px 20px; margin: 0;
+  }
+  dl.facts > div { min-width: 0; }
+  dl.facts dt { font-size: 0.72rem; font-weight: 700; opacity: 0.75; margin: 0 0 2px; }
+  dl.facts dd { margin: 0; font-size: 0.88rem; font-weight: 700; }
+
+  .contact { margin-top: 16px; font-size: 0.9rem; font-weight: 600; }
+  .contact strong { font-weight: 800; }
+
+  .discover {
+    margin-top: 20px; padding: 26px 28px;
+    background: #fff; color: var(--navy);
+    border-radius: 28px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .discover .mark { font-size: 1.4rem; line-height: 1.3; flex: none; }
+  .discover h2 { font-weight: 800; font-size: 1.2rem; margin: 0 0 6px; }
+  .discover p { margin: 0 0 10px; font-size: 0.93rem; max-width: 62ch; }
+  .discover a { color: var(--red-ink); }
+  .discover a:hover { color: var(--navy); }
+
+  footer {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 2px solid rgba(255,255,255,0.3);
+    font-size: 0.85rem; font-weight: 600;
+  }
+
+  @media (max-width: 640px) {
+    .cafe-grid { grid-template-columns: 1fr; }
+    header.page-head > .squiggle { display: none; }
+    header.page-head h1 { padding: 24px 32px; }
+    .mission { padding: 20px; }
+  }
+  @media print {
+    nav.chips, .squiggle { display: none; }
+    html { background: #fff; }
+    body, a, header.page-head h1 { color: #111; }
+    .assoc, footer { border-color: #ccc; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <svg class="squiggle" viewBox="0 0 270 110" fill="none" aria-hidden="true"><path d="M10 70C40 5 85 5 105 55s60 60 90 0 40-50 65-20" stroke="#9AD0AF" stroke-width="16" stroke-linecap="round"/></svg>
+    <h1>S'engager pendant l'année</h1>
+    <p class="intro">Accompagnement scolaire auprès d'enfants et d'adolescents, tutorat rémunéré, projets de vie de campus, ou solidarité entre étudiant·es : dix associations et dispositifs pour s'investir selon vos disponibilités. Contactez directement le responsable de la mission, ou candidatez en ligne.</p>
+    <div class="legend">
+      <span class="mark">🎓</span>
+      <span>Les missions marquées <strong>UE Engagement étudiant</strong> sont référencées par le Pôle Vie de Campus de l'Université Paris Cité et comptent pour l'UE libre engagement étudiant (30h minimum, sur un semestre ou l'année).</span>
+    </div>
+  </header>
+
+  <section class="cafes" aria-labelledby="cafes-title">
+    <h2 id="cafes-title">Venez en parler aux Cafés de l'engagement</h2>
+    <p class="sub">En janvier 2027, de 12h30 à 14h30 : un moment convivial pour échanger, découvrir comment s'engager à l'université et rencontrer d'autres étudiants.</p>
+    <div class="cafe-grid">
+      <div class="cafe" style="--bg:var(--navy);--ink:#fff;--tile:var(--yellow);--tile-ink:var(--navy)">
+        <div class="cafe-date"><small>Mardi</small><b>12</b><small>Janvier</small></div>
+        <div><h3>Campus de Boulogne</h3><p>Hall d'entrée</p></div>
+      </div>
+      <div class="cafe" style="--bg:var(--sky);--ink:var(--navy);--tile:var(--navy);--tile-ink:#fff">
+        <div class="cafe-date"><small>Jeudi</small><b>14</b><small>Janvier</small></div>
+        <div><h3>Campus des Grands Moulins</h3><p>Bât. Lamarck A – Maison de l'étudiant</p></div>
+      </div>
+      <div class="cafe" style="--bg:var(--pink);--ink:var(--navy);--tile:var(--navy);--tile-ink:#fff">
+        <div class="cafe-date"><small>Mardi</small><b>19</b><small>Janvier</small></div>
+        <div><h3>Site de Lacretelle</h3><p>Hall d'entrée</p></div>
+      </div>
+      <div class="cafe" style="--bg:var(--mint);--ink:var(--navy);--tile:var(--navy);--tile-ink:#fff">
+        <div class="cafe-date"><small>Jeudi</small><b>21</b><small>Janvier</small></div>
+        <div><h3>Site de Malakoff</h3><p>Hall d'entrée</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="filter-group">
+    <p class="filter-label">Thème</p>
+    <nav class="chips" id="theme-filters">
+      <button class="chip active" data-filter="all">Toutes les missions</button>
+      <button class="chip" data-filter="aide-devoirs">Aide aux devoirs</button>
+      <button class="chip" data-filter="sorties">Sorties &amp; activités</button>
+      <button class="chip" data-filter="visio">À distance / visio</button>
+      <button class="chip" data-filter="mentorat">Mentorat via plateforme</button>
+      <button class="chip" data-filter="solidarite">Solidarité étudiante</button>
+      <button class="chip" data-filter="projets">Projets &amp; vie de campus</button>
+    </nav>
+  </div>
+  <div class="filter-group">
+    <p class="filter-label">Statut</p>
+    <nav class="chips" id="status-filters">
+      <button class="chip active" data-status="all">Tout statut</button>
+      <button class="chip" data-status="benevole">Bénévolat</button>
+      <button class="chip" data-status="remunere">Rémunéré</button>
+    </nav>
+  </div>
+
+  <main id="list">
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>Centre social Chevaleret</h2>
+        <p class="assoc-loc">9 bis rue du Chevaleret, Paris 13<sup>e</sup></p>
+      </div>
+      <div class="missions">
+        <article class="mission" data-theme="aide-devoirs" data-status="benevole">
+          <div class="mission-top">
+            <h3>Projet Jeunes — accompagnement scolaire</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Aide aux devoirs</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+            </div>
+          </div>
+          <p class="desc">Accompagnement scolaire, temps conviviaux, sorties culturelles et participation aux fêtes du centre et du quartier, selon les envies du bénévole.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Jeunes du quartier</dd></div>
+            <div><dt>Quand</dt><dd>Lundis et mercredis, 17h–19h</dd></div>
+            <div><dt>Où</dt><dd>Sur place, centre social</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="contact"><strong>Contact —</strong> <a href="tel:0153796400">01 53 79 64 00</a></div>
+    </section>
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>Maison 13 Solidaire</h2>
+        <p class="assoc-loc">13 rue Annie Girardot, Paris 13<sup>e</sup></p>
+      </div>
+      <div class="missions">
+        <article class="mission" data-theme="aide-devoirs" data-status="benevole">
+          <div class="mission-top">
+            <h3>Accompagnement à la scolarité</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Aide aux devoirs</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+            </div>
+          </div>
+          <p class="desc">Soutenir l'apprentissage des enfants et adolescents dans leurs devoirs, et les aider à se construire socialement. Aucune compétence spécifique requise : bienveillance et patience suffisent.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Primaires et collégiens</dd></div>
+            <div><dt>Quand</dt><dd>Primaires : lun/mar/jeu 16h30–18h30 · Collégiens : mer/ven 17h–19h</dd></div>
+            <div><dt>Où</dt><dd>Sur place, Maison 13 Solidaire</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="contact"><strong>Contact —</strong> <a href="mailto:enfance-jeunesse@maison13solidaire.fr">enfance-jeunesse@maison13solidaire.fr</a> · <a href="tel:0171194358">01 71 19 43 58</a></div>
+    </section>
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>Centre social et culturel Rosa-Parks</h2>
+        <p class="assoc-loc">219 boulevard Macdonald, Paris 19<sup>e</sup></p>
+      </div>
+      <div class="missions">
+        <article class="mission" data-theme="aide-devoirs" data-status="benevole">
+          <div class="mission-top">
+            <h3>Accompagnement à la scolarité / aide aux devoirs</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Aide aux devoirs</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+              <span class="badge uni-badge">🎓 UE Engagement étudiant</span>
+            </div>
+          </div>
+          <p class="desc">Accompagner de façon individuelle et collective un groupe de 15 collégiens/lycéens dans leurs devoirs, en lien avec la coordinatrice jeunesse. Mission souple : possibilité de ne venir qu'un jour par semaine.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Collégiens et lycéens</dd></div>
+            <div><dt>Quand</dt><dd>Lundi et/ou mercredi, 17h–19h</dd></div>
+            <div><dt>Où</dt><dd>Sur place, centre Rosa-Parks</dd></div>
+            <div><dt>Engagement</dt><dd>30 à 100h · 02/11/26 au 12/06/27 · 5 places</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="contact"><strong>Contact —</strong> Margaux Michel · <a href="mailto:jeunesse@centrerosaparks.paris">jeunesse@centrerosaparks.paris</a> · <a href="tel:0142858588">01 42 85 85 88</a></div>
+    </section>
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>Les Amis de la Maison Verte</h2>
+        <p class="assoc-loc">Éducation, solidarité et lien social</p>
+      </div>
+      <div class="missions">
+        <article class="mission" data-theme="aide-devoirs" data-status="benevole">
+          <div class="mission-top">
+            <h3>Accompagnement à la scolarité et animation socio-éducative</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Aide aux devoirs</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+              <span class="badge uni-badge">🎓 UE Engagement étudiant</span>
+            </div>
+          </div>
+          <p class="desc">Accompagner les devoirs, coanimer des jeux et ateliers éducatifs, et participer ponctuellement aux sorties de l'association, dans un cadre bienveillant.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Enfants et collégiens</dd></div>
+            <div><dt>Quand</dt><dd>Hebdomadaire, créneau de 1h30 à 2h selon dispo</dd></div>
+            <div><dt>Engagement</dt><dd>30h min · 21/09/26 au 30/06/27 · 6 places ou plus</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="contact"><strong>Contact —</strong> Romain Cossou · <a href="mailto:contact@lamaisonverte.org">contact@lamaisonverte.org</a> · <a href="tel:0685789132">06 85 78 91 32</a></div>
+    </section>
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>La Courte Echelle</h2>
+        <p class="assoc-loc">Collège public de Sèvres (92310)</p>
+      </div>
+      <div class="missions">
+
+        <article class="mission" data-theme="aide-devoirs" data-status="benevole">
+          <div class="mission-top">
+            <h3>J'accompagne quelques élèves à faire leurs devoirs</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Aide aux devoirs</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+              <span class="badge uni-badge">🎓 UE Engagement étudiant</span>
+            </div>
+          </div>
+          <p class="desc">Aider 2 ou 3 élèves de 6<sup>e</sup>/5<sup>e</sup> à faire leurs devoirs, montrer des méthodes de travail, aux côtés d'un bénévole permanent. Toujours les mêmes élèves d'une semaine sur l'autre.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Élèves de 6<sup>e</sup>/5<sup>e</sup></dd></div>
+            <div><dt>Quand</dt><dd>1 jour au choix — lun / mar / jeu, 16h30–18h</dd></div>
+            <div><dt>Engagement</dt><dd>30h min · 15/10/26 au 01/06/27 · 3 places</dd></div>
+          </dl>
+        </article>
+
+        <article class="mission" data-theme="sorties" data-status="benevole">
+          <div class="mission-top">
+            <h3>J'accompagne un groupe d'élèves en visite culturelle</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Sorties &amp; activités</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+              <span class="badge uni-badge">🎓 UE Engagement étudiant</span>
+            </div>
+          </div>
+          <p class="desc">Co-animer avec 2 bénévoles permanents une sortie musée ou exposition pour un groupe de 15 à 20 enfants du CP à la 3<sup>e</sup>, au départ et au retour de Sèvres. 5 à 7 sorties programmées dans l'année.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Enfants du CP à la 3<sup>e</sup></dd></div>
+            <div><dt>Quand</dt><dd>1/2 j ou 1 j, ~1×/mois, plutôt le samedi</dd></div>
+            <div><dt>Engagement</dt><dd>30h · 01/10/26 au 15/05/27 · 2 places</dd></div>
+          </dl>
+        </article>
+
+        <article class="mission" data-theme="visio" data-status="benevole">
+          <div class="mission-top">
+            <h3>J'accompagne un élève en visio</h3>
+            <div class="badges">
+              <span class="badge theme-badge">À distance / visio</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+              <span class="badge uni-badge">🎓 UE Engagement étudiant</span>
+            </div>
+          </div>
+          <p class="desc">Aider un collégien ou lycéen en visioconférence — matières scientifiques, anglais ou histoire-géo selon le profil. Vient en complément d'un accompagnement en présentiel au collège de Sèvres.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Collégiens et lycéens</dd></div>
+            <div><dt>Quand</dt><dd>Hebdomadaire, créneau à définir</dd></div>
+            <div><dt>Engagement</dt><dd>30h · 15/10/26 au 15/05/27 · 10 places</dd></div>
+          </dl>
+        </article>
+
+      </div>
+      <div class="contact"><strong>Contact (3 missions) —</strong> Elisabeth Normant · <a href="mailto:elisabeth.normant@sevreslce.fr">elisabeth.normant@sevreslce.fr</a> · <a href="tel:0610329738">06 10 32 97 38</a></div>
+    </section>
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>ZUPdeCO</h2>
+        <p class="assoc-loc">Gommons les inégalités scolaires</p>
+      </div>
+      <div class="missions">
+        <article class="mission" data-theme="mentorat" data-status="benevole">
+          <div class="mission-top">
+            <h3>Deviens bénévole, aide un jeune à réussir à l'école</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Mentorat via plateforme</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+            </div>
+          </div>
+          <p class="desc">Association nationale de mentorat scolaire : un bénévole accompagne dans la durée un ou plusieurs élèves en difficulté, en établissement partenaire (REP/REP+) ou à distance, jusqu'à amélioration de ses résultats.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Du primaire au lycée</dd></div>
+            <div><dt>Quand</dt><dd>Env. 1 à 2h/semaine, créneaux flexibles</dd></div>
+            <div><dt>Où</dt><dd>En établissement partenaire ou à distance</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="contact"><strong>Inscription —</strong> sur <a href="https://zupdeco.org" target="_blank" rel="noopener">zupdeco.org</a></div>
+          </section>
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>Parkours</h2>
+        <p class="assoc-loc">Missions en établissement, partout en France</p>
+      </div>
+      <div class="missions">
+        <article class="mission" data-theme="aide-devoirs" data-status="remunere">
+          <div class="mission-top">
+            <h3>Tutorat Parkours — groupes de 3 à 5 élèves</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Aide aux devoirs</span>
+              <span class="badge paid-badge">💶 Rémunéré</span>
+            </div>
+          </div>
+          <p class="desc">Anime un groupe de 3 à 5 élèves de même niveau, dans une salle de classe de l'établissement, en tant que tuteur·rice étudiant·e. Mission proche de chez toi ou de ta fac, adaptable à ton emploi du temps et valorisable sur ton CV.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Groupes de 3 à 5 élèves, par niveau</dd></div>
+            <div><dt>Quand</dt><dd>Adaptable à ton emploi du temps</dd></div>
+            <div><dt>Où</dt><dd>Salle de classe, établissement partenaire</dd></div>
+            <div><dt>Rémunération</dt><dd>15€ à 19€ de l'heure</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="contact"><strong>Postuler —</strong> sur <a href="https://parkours.fr" target="_blank" rel="noopener">parkours.fr</a></div>
+    </section>
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>Cop1 — Solidarités étudiantes</h2>
+        <p class="assoc-loc">Antennes locales, partout en France</p>
+      </div>
+      <div class="missions">
+        <article class="mission" data-theme="solidarite" data-status="benevole">
+          <div class="mission-top">
+            <h3>Devenir bénévole Cop1</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Solidarité étudiante</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+            </div>
+          </div>
+          <p class="desc">Association par et pour les étudiant·es qui lutte contre toutes les formes de précarité étudiante : distributions alimentaires et vestimentaires, ateliers, accès aux droits, activités culturelles et sportives, accueil et orientation. Aucune expérience requise, on apprend ensemble.</p>
+          <dl class="facts">
+            <div><dt>Public</dt><dd>Étudiant·es en situation de précarité</dd></div>
+            <div><dt>Quand</dt><dd>À ton rythme : 2h, 5h, 10h ou plus</dd></div>
+            <div><dt>Où</dt><dd>Antennes locales, partout en France</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="contact"><strong>Inscription —</strong> sur <a href="https://cop1.fr" target="_blank" rel="noopener">cop1.fr</a></div>
+    </section>
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>P.A.R.I.S</h2>
+        <p class="assoc-loc">Ludopédagogie, transition environnementale</p>
+      </div>
+      <div class="missions">
+        <article class="mission" data-theme="projets" data-status="benevole">
+          <div class="mission-top">
+            <h3>Escape game sur la transition écologique</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Projets &amp; vie de campus</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+              <span class="badge uni-badge">🎓 UE Engagement étudiant</span>
+            </div>
+          </div>
+          <p class="desc">Contribuer à la conception, aux tests et à l'animation d'un escape game pédagogique sur la transition écologique des entreprises : scénographie, fabrication d'objets au FabLab, tests en conditions réelles, puis animation en tant que maître·sse du jeu si vous le souhaitez. Aucune compétence technique requise.</p>
+          <dl class="facts">
+            <div><dt>Profil</dt><dd>Curiosité, créativité, goût du travail en équipe</dd></div>
+            <div><dt>Quand</dt><dd>10 semaines, sept. 2026 à janv. 2027 · 3–4h/semaine</dd></div>
+            <div><dt>Où</dt><dd>À distance, RDV à l'IUT Rives de Seine + FabLab</dd></div>
+            <div><dt>Engagement</dt><dd>35h · 2 places</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="contact"><strong>Contact —</strong> David Laille · <a href="mailto:david.laille@u-pariscite.fr">david.laille@u-pariscite.fr</a> · questions complémentaires : <a href="mailto:eline.vivet@u-paris.fr">eline.vivet@u-paris.fr</a></div>
+    </section>
+
+    <section class="assoc">
+      <div class="assoc-head">
+        <h2>Pôle Culture — DVC</h2>
+        <p class="assoc-loc">Culture</p>
+      </div>
+      <div class="missions">
+        <article class="mission" data-theme="projets" data-status="benevole">
+          <div class="mission-top">
+            <h3>Ambassadeur / Ambassadrice du Pôle culture</h3>
+            <div class="badges">
+              <span class="badge theme-badge">Projets &amp; vie de campus</span>
+              <span class="badge benevole-badge">🤝 Bénévolat</span>
+              <span class="badge uni-badge">🎓 UE Engagement étudiant</span>
+            </div>
+          </div>
+          <p class="desc">Diffuser l'information culturelle auprès des étudiant·es et des associations étudiantes des différents campus : affiches et flyers, réseaux sociaux (Instagram), et présence sur les forums, stands et spectacles.</p>
+          <dl class="facts">
+            <div><dt>Profil</dt><dd>Sens de l'organisation, communication orale</dd></div>
+            <div><dt>Quand</dt><dd>½ journée/semaine + forums et spectacles</dd></div>
+            <div><dt>Où</dt><dd>Différents campus de l'université</dd></div>
+            <div><dt>Engagement</dt><dd>30h max · 01/10/26 au 10/12/26 · 2 places</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="contact"><strong>Contact —</strong> Christiane Fortassin · <a href="mailto:christiane.fortassin@u-pariscite.fr">christiane.fortassin@u-pariscite.fr</a> · <a href="tel:0157276436">01 57 27 64 36</a></div>
+    </section>
+
+  </main>
+
+  <div class="discover">
+    <span class="mark">🧭</span>
+    <div>
+      <h2>D'autres associations à découvrir</h2>
+      <p>Cette page ne couvre que les missions transmises au Pôle Vie de Campus et quelques appels à bénévolat repérés. L'université recense bien d'autres associations étudiantes, sur des thématiques très variées.</p>
+      <a href="https://u-paris.fr/associations-etudiantes/" target="_blank" rel="noopener">Voir toutes les associations étudiantes sur u-paris.fr</a>
+    </div>
+  </div>
+
+  <footer>
+    Page compilée à partir des affiches et fiches de mission transmises par les associations. Page mise à jour le 22 septembre 2026 — à actualiser à mesure que de nouvelles missions arrivent.
+  </footer>
+
+</div>
+
+<script>
+(function() {
+  var themeChips = document.querySelectorAll('#theme-filters .chip');
+  var statusChips = document.querySelectorAll('#status-filters .chip');
+  var missions = document.querySelectorAll('.mission');
+  var groups = document.querySelectorAll('.assoc');
+
+  var activeTheme = 'all';
+  var activeStatus = 'all';
+
+  function applyFilters() {
+    missions.forEach(function(m) {
+      var themeMatch = (activeTheme === 'all') || (m.getAttribute('data-theme') === activeTheme);
+      var statusMatch = (activeStatus === 'all') || (m.getAttribute('data-status') === activeStatus);
+      m.style.display = (themeMatch && statusMatch) ? '' : 'none';
+    });
+    groups.forEach(function(g) {
+      var visible = g.querySelectorAll('.mission:not([style*="display: none"])').length > 0;
+      g.style.display = visible ? '' : 'none';
+    });
+  }
+
+  themeChips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      themeChips.forEach(function(c) { c.classList.remove('active'); });
+      chip.classList.add('active');
+      activeTheme = chip.getAttribute('data-filter');
+      applyFilters();
+    });
+  });
+
+  statusChips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      statusChips.forEach(function(c) { c.classList.remove('active'); });
+      chip.classList.add('active');
+      activeStatus = chip.getAttribute('data-status');
+      applyFilters();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
